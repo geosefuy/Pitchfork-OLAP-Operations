@@ -6,20 +6,61 @@
     <title><%= title %></title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-giJF6kkoqNQ00vy+HMDP7azOuL0xtbfIcaT9wjKHr8RbDVddVHyTfAAsrekwKmP1" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0-beta1/dist/js/bootstrap.bundle.min.js" integrity="sha384-ygbV9kiqUc6oa4msXn9868pTtWMgiQaeYH7/t7LECLbyPA2x65Kgf80OJFdroafW" crossorigin="anonymous"></script>
-    <script>
-        $("input[type='number']").inputSpinner()
-    </script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.0/jquery.min.js"></script>
 </head>
 <body>
     <%- include ("navbar.ejs", {one: true, two: false, three: false, foursix: false}) %>
     <div class="container">
         <div class="row">
             <form action="/rollup/getquery" method="post">
-                <label for="query1" class="form-label">Query 1: Number of albums with a score of at least X (ex. 8) in each published year</label>
-                <input type="number" class="form-control" placeholder="Score 0 - 10" name="query1" min="0" max="10">
-                <!-- <input type="text" class="form-control" placeholder="Score 0 - 10" name="query1"> -->
+                <h5 for="query1" class="form-label mt-3">Rollup Query: Number of reviews made grouped by 4 categories per row</h5>
+                <p>Determines the trend in reviews for specific genres for Pitchfork; what Pitchfork reviewers want to rate at a specific point in time</p>
+                <div class="row">
+                    <div class="col-3">
+                        <select name="field1" id="field1" class="form-control">
+                            <option value="blank1" selected>Select Field</option>
+                            <option value="year">Year</option>
+                            <option value="pub_year">Publication Year</option>
+                            <option value="pub_month">Publication Month</option>
+                            <option value="genre1">Primary Genre</option>
+                            <option value="genre1">Genres and Subgenres</option>
+                        </select>
+                    </div>
+                    <div class="col-3">
+                        <select name="field2" id="field2" class="form-control">
+                            <option value="blank2" class="placeholder" selected>Select Field</option>
+                            <option value="year">Year</option>
+                            <option value="pub_year">Publication Year</option>
+                            <option value="pub_month">Publication Month</option>
+                            <option value="genre1">Primary Genre</option>
+                            <option value="genre2" class="subgenre" hidden>Subgenre 1</option>
+                        </select>
+                    </div>
+                    <div class="col-3">
+                        <select name="field3" id="field3" class="form-control">
+                            <option value="blank3" class="placeholder" selected>Select Field</option>
+                            <option value="year">Year</option>
+                            <option value="pub_year">Publication Year</option>
+                            <option value="pub_month">Publication Month</option>
+                            <option value="genre1">Primary Genre</option>
+                            <option value="genre3" class="subgenre" hidden>Subgenre 2</option>
+                        </select>
+                    </div>
+                    <div class="col-3">
+                        <select name="field4" id="field4" class="form-control">
+                            <option value="blank4" class="placeholder" selected>Select Field</option>
+                            <option value="year">Year</option>
+                            <option value="pub_year">Publication Year</option>
+                            <option value="pub_month">Publication Month</option>
+                            <option value="genre1">Primary Genre</option>
+                            <option value="genre4" class="subgenre" hidden>Subgenre 3</option>
+                        </select>
+                    </div>
+                </div>
                 <br>
-                <input class="btn btn-primary mr-3" type="submit" value="Search">
+                <p id="blank-error" class="text-danger" hidden>Blank fields are not allowed.</p>
+                <p id="dupe-error" class="text-danger" hidden>Duplicate fields are not allowed.</p>
+                <input id="submit" class="btn btn-primary mr-3" type="submit" value="Search" disabled>
             </form>
         </div>
       </div>
@@ -43,5 +84,68 @@
         </table>
     </div>
     <% } %>
+
+    <script>
+        function checkErr() {
+            const field1 = $("#field1").val()
+            const field2 = $("#field2").val()
+            const field3 = $("#field3").val()
+            const field4 = $("#field4").val()
+
+            let dupe = 
+                field1 === field2 || field1 === field3 || field1 === field4 ||
+                field2 === field3 || field2 === field4 ||
+                field3 === field4
+            
+            let blank = 
+                field1 === "blank1" || 
+                field2 === "blank2" || 
+                field3 === "blank3" ||
+                field4 === "blank4"
+
+            if (dupe) {
+                $("#dupe-error").attr("hidden", false)
+            } else {
+                $("#dupe-error").attr("hidden", true)
+            }
+
+            if (blank) {
+                $("#blank-error").attr("hidden", false)
+            } else {
+                $("#blank-error").attr("hidden", true)
+            }
+
+            if (dupe || blank) {
+                $("#submit").attr("disabled", true)
+            } else {
+                $("#submit").attr("disabled", false)
+            }
+        }
+
+        $("#field1").on("change", function () {
+            let selected = 
+                $("#field1")
+                    .children("option")
+                    .filter(":selected")
+                    .text()
+
+            if (selected === "Genres and Subgenres") {
+                $("#field2, #field3, #field4").attr("disabled", true)
+                $(".subgenre").attr({ "hidden": false, "selected": true })
+            } else {
+                $("#field2, #field3, #field4").attr("disabled", false)
+                $(".placeholder").attr("selected", true)
+                $(".subgenre").attr({ "hidden": true, "selected": false })
+            }
+
+            checkErr()
+        })
+
+        $("#field2, #field3, #field4").on("change", function () {
+            checkErr()
+        })
+
+        
+    </script>
 </body>
 </html>
