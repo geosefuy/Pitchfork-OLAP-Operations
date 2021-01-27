@@ -10,6 +10,16 @@
 </head>
 <body>
     <%- include ("navbar.ejs", {one: false, two: true, three: false, foursix: false}) %>
+    <% function getEqString(fieldName) {
+        if (fieldName == "year") return "Release Year"
+        if (fieldName == "pub_year") return "Publication Year"
+        if (fieldName == "pub_month") return "Publication Month"
+        if (fieldName == "pub_weekday") return "Publication Weekday"
+        if (fieldName == "author") return "Author"
+        if (fieldName == "author_type") return "Author Type"
+        if (fieldName == "artist") return "Arrtist"
+        if (fieldName == "label") return "Label"
+    } %>
     <div class="container">
         <div class="row">
             <form action="/drilldown/getquery" method="post">
@@ -97,13 +107,14 @@
                     <th scope="col"><%= getEqString(headers.field3) %></th>
                     <th scope="col"><%= getEqString(headers.field4) %></th>
                     <th scope="col"><%= getEqString(headers.field5) %></th>
+                    <th scope="col">Normalized Review Score</th>
                 </tr>
             </thead>
             <tbody>
                 <% result.forEach((record, index) => { %>
                     <tr>
                         <% for (let key in record) { %>
-                            <td> record[key] </td>
+                            <td> <%= record[key] %> </td>
                         <% } %>
                     </tr>
                 <% }) %>
@@ -112,17 +123,6 @@
     </div>
     <% } %>
     <script>
-        function getEqString(fieldName) {
-            if (fieldName = "year") return "Release Year"
-            if (fieldName = "pub_year") return "Publication Year"
-            if (fieldName = "pub_month") return "Publication Month"
-            if (fieldName = "pub_weekday") return "Publication Weekday"
-            if (fieldName = "author") return "Author"
-            if (fieldName = "author_type") return "Author Type"
-            if (fieldName = "artist") return "Arrtist"
-            if (fieldName = "label") return "Label"
-        }
-
         function checkErr() {
             const field1 = $("#field1").val()
             const field2 = $("#field2").val()

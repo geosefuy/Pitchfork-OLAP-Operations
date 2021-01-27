@@ -33,7 +33,7 @@ const db = mysql.createConnection({
     user: 'root',
     password: '1234',
     port: 3306,
-    database: 'pitchfork', // change to pitchfork_star once sql is imported
+    database: 'pitchfork_star',
     multipleStatements: true
 });
 

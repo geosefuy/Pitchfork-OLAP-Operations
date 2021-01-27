@@ -10,6 +10,15 @@
 </head>
 <body>
     <%- include ("navbar.ejs", {one: true, two: false, three: false, foursix: false}) %>
+    <% function getEqString(fieldName) {
+        if (fieldName == "year") return "Release Year"
+        if (fieldName == "pub_year") return "Publication Year"
+        if (fieldName == "pub_month") return "Publication Month"
+        if (fieldName == "genre1") return "Primary Genre"
+        if (fieldName == "genre2") return "Subgenre 1"
+        if (fieldName == "genre3") return "Subgenre 2"
+        if (fieldName == "genre4") return "Subgenre 3"
+    } %>
     <div class="container">
         <div class="row">
             <form action="/rollup/getquery" method="post">
@@ -73,13 +82,14 @@
                     <th scope="col"><%= getEqString(headers.field2) %></th>
                     <th scope="col"><%= getEqString(headers.field3) %></th>
                     <th scope="col"><%= getEqString(headers.field4) %></th>
+                    <th scope="col">Number of Reviews</th>
                 </tr>
             </thead>
             <tbody>
                 <% result.forEach((record, index) => { %>
                     <tr>
                         <% for (let key in record) { %>
-                            <td> record[key] </td>
+                            <td> <%= record[key] %> </td>
                         <% } %>
                     </tr>
                 <% }) %>
@@ -89,16 +99,6 @@
     <% } %>
 
     <script>
-        function getEqString(fieldName) {
-            if (fieldName = "year") return "Release Year"
-            if (fieldName = "pub_year") return "Publication Year"
-            if (fieldName = "pub_month") return "Publication Month"
-            if (fieldName = "genre1") return "Primary Genre"
-            if (fieldName = "genre2") return "Subgenre 1"
-            if (fieldName = "genre3") return "Subgenre 2"
-            if (fieldName = "genre4") return "Subgenre 3"
-        }
-
         function checkErr() {
             const field1 = $("#field1").val()
             const field2 = $("#field2").val()
