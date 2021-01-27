@@ -8,7 +8,7 @@
 ALTER USER 'root'@'localhost' IDENTIFIED WITH mysql_native_password BY '1234';
 flush privileges;
 ```
-4. Open and run new_pitchfork.sql
+4. Open and run pitchfor_star.sql
 
 ## Web Application
 1. Install dependencies with `npm install`

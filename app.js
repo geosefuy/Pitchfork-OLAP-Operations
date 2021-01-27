@@ -20,11 +20,11 @@ const { loadSlice, querySlice } = require('./routes/slice');
 // });
 // Local DB connection with CLOUD SQL
 // const db = mysql.createConnection({
-//     host: '34.87.150.174',
+//     host: '35.201.146.224',
 //     user: 'root',
 //     password: '1234',
 //     port: 3306,
-//     database: 'pitchfork',
+//     database: 'pitchfork_star',
 //     multipleStatements: true
 // });
 // Local DB connection with Local SQL 'pitchforks_unoptimized'
@@ -33,7 +33,7 @@ const db = mysql.createConnection({
     user: 'root',
     password: '1234',
     port: 3306,
-    database: 'pitchfork_unoptimized',
+    database: 'pitchfork', // change to pitchfork_star once sql is imported
     multipleStatements: true
 });
 

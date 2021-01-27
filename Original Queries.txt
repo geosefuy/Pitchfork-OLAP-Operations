@@ -1,78 +1,106 @@
 Rollup Query:
 
-SELECT r.pub_year, COUNT(r.title) albums
-FROM reviews r
-WHERE r.score >= X
-GROUP BY r.pub_year
-ORDER BY r.pub_year
-
-SELECT r.author_type, COUNT(r.author) authors
-FROM reviews r
-WHERE r.pub_weekday BETWEEN X AND X AND r.author_type <> ""
-GROUP BY r.author_type
+SELECT X, X, X, X, COUNT(score) numReviews
+FROM reviews r, (albums a, time t)
+WHERE (id joining)
+GROUP BY X, X, X, X WITH ROLLUP;
 
 Drilldown Query:
 
-SELECT r.author, COUNT(r.author) reviewCount
-FROM reviews r, years y
-WHERE r.reviewid = y.reviewid AND
-y.year BETWEEN X AND X
-GROUP BY r.author
-ORDER BY COUNT(r.author) DESC
-LIMIT 3
-
-SELECT g.genre, COUNT(g.reviewid) reviewCount
-FROM genres g, reviews r
-WHERE g.reviewid = r.reviewid AND r.pub_year = X
-GROUP BY g.genre
-HAVING COUNT(g.reviewid) = (
-SELECT MIN(genrecount)
-FROM (
-SELECT COUNT(g.reviewid) genrecount
-FROM genres g, reviews r
-WHERE g.reviewid = r.reviewid AND r.pub_year = X
-GROUP BY g.genre
-) a )
+SELECT X, X, X, X, X, AVG(score - (SELECT AVG(score) FROM reviews)) avgNormScore
+FROM reviews r, (artists a, authors au, time t)
+WHERE (id joining)
+GROUP BY X, X, X, X, X;
 
 Dice Query:
 
-SELECT y.year, g.genre, ROUND(AVG(r.score), 2) avgScore, MAX(r.score) maxScore, MIN(r.score) minScore
-FROM reviews r, years y, genres g
-WHERE r.reviewid = y.reviewid AND r.reviewid = g.reviewid AND year = X
-GROUP BY y.year, g.genre
+CREATE TEMPORARY TABLE diceCube
+SELECT year, author, author_type, pub_weekday, COUNT(score) reviewCount
+FROM reviews r, albums a, authors au, time t
+WHERE r.albumid = a.albumid AND r.authorid = au.authorid AND r.timeid = t.timeid
+GROUP BY year, author, author_type, pub_weekday
+WITH ROLLUP
 
-SELECT g.genre, y.year, r.* 
-FROM reviews r, genres g, years y
-WHERE r.reviewid = g.reviewid 
-AND r.reviewid = y.reviewid 
-AND r.pub_year = X
-AND y.year = X
-AND g.genre = X
-AND (g.genre, r.pub_month, r.pub_day) IN (
-SELECT genre, pub_month, MAX(pub_day)
-FROM reviews r, genres g
-WHERE pub_year = X
-AND g.genre = X
-AND r.reviewid = g.reviewid
-GROUP BY pub_month, genre
-)
-ORDER BY r.pub_month
+UNION
+
+SELECT year, author, author_type, pub_weekday, COUNT(score) reviewCount
+FROM reviews r, albums a, authors au, time t
+WHERE r.albumid = a.albumid AND r.authorid = au.authorid AND r.timeid = t.timeid
+GROUP BY author, author_type, pub_weekday, year
+WITH ROLLUP
+
+UNION
+
+SELECT year, author, author_type, pub_weekday, COUNT(score) reviewCount
+FROM reviews r, albums a, authors au, time t
+WHERE r.albumid = a.albumid AND r.authorid = au.authorid AND r.timeid = t.timeid
+GROUP BY author_type, pub_weekday, year, author
+WITH ROLLUP
+
+UNION
+
+SELECT year, author, author_type, pub_weekday, COUNT(score) reviewCount
+FROM reviews r, albums a, authors au, time t
+WHERE r.albumid = a.albumid AND r.authorid = au.authorid AND r.timeid = t.timeid
+GROUP BY pub_weekday, year, author, author_type
+WITH ROLLUP
+
+UNION
+
+SELECT year, NULL, author_type, NULL, COUNT(score) reviewCount
+FROM reviews r, albums a, authors au, time t
+WHERE r.albumid = a.albumid AND r.authorid = au.authorid AND r.timeid = t.timeid
+GROUP BY year, author_type
+
+UNION
+
+SELECT NULL, author, NULL, pub_weekday, COUNT(score) reviewCount
+FROM reviews r, albums a, authors au, time t
+WHERE r.albumid = a.albumid AND r.authorid = au.authorid AND r.timeid = t.timeid
+GROUP BY author, pub_weekday
+
+ORDER BY
+year IS NULL, year,
+author IS NULL, author,
+author_type IS NULL, author_type,
+pub_weekday IS NULL, pub_weekday;
+
+SELECT year, author, author_type, pub_weekday, reviewCount
+FROM diceCube
+WHERE author_type = X AND pub_weekday = X;
+
+DROP TABLE diceCube;
 
 Slice Query:
 
-SELECT r.title, r.artist, l.label, g.genre, y.year, r.score, r.pub_date
-FROM reviews r, labels l, genres g, years y
-WHERE r.reviewid = l.reviewid 
-AND r.reviewid = g.reviewid 
-AND r.reviewid = y.reviewid 
-AND r.pub_month = ` + month + ` 
-AND r.pub_year = ` + year + ` 
-AND y.year = ` + year + ` 
-AND r.score < (
-SELECT AVG(r2.score)
-FROM reviews r2, years y2
-WHERE r2.reviewid = y2.reviewid AND y2.year = ` + yearminus + `
-GROUP BY y2.year
-)
-ORDER BY r.score DESC
-LIMIT 10
+CREATE TEMPORARY TABLE sliceCube
+SELECT label, year, artist, AVG(score) avgScore
+FROM reviews r, albums a, artists ar
+WHERE r.albumid = a.albumid AND r.artistid = ar.artistid
+GROUP BY label, year, artist
+WITH ROLLUP
+
+UNION
+
+SELECT label, year, artist, AVG(score) avgScore
+FROM reviews r, albums a, artists ar
+WHERE r.albumid = a.albumid AND r.artistid = ar.artistid
+GROUP BY year, artist, label, 
+WITH ROLLUP
+
+UNION
+
+SELECT label, year, artist, AVG(score) avgScore
+FROM reviews r, albums a, artists ar
+WHERE r.albumid = a.albumid AND r.artistid = ar.artistid
+GROUP BY artist, label, year
+WITH ROLLUP
+
+ORDER BY
+label IS NULL, label,
+year IS NULL, year,
+artist IS NULL, artist;
+
+SELECT label, year, artist, avgScore
+FROM sliceCube
+WHERE label = X;

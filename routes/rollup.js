@@ -3,30 +3,26 @@ module.exports = {
     loadRollup: (req, res) => {
         res.render('rollup.ejs', { // Pass data to front end
             title: "Rollup Query",
-            result1: false,
-            result2: false,
-            time: false
+            result: false,
         });
     },
     queryRollup: (req, res) => {
         //query here
-        let score = req.body.query1;
-        let query = `SELECT r.pub_year, COUNT(r.title) albums
-                        FROM reviews r
-                        WHERE r.score >= ` + score + `
-                        GROUP BY r.pub_year
-                        ORDER BY r.pub_year`;
+        let field1 = req.body.field1;
+        let field2 = req.body.field2;
+        let field3 = req.body.field3;
+        let field4 = req.body.field4;
+        let query = `SELECT ` + field1 + `, ` + field2 + `, `+ field3 + `, ` + field4 + `, COUNT(score) numReviews
+                        FROM reviews r, (albums a, time t)
+                        WHERE (id joining)
+                        GROUP BY ` + field1 + `, ` + field2 + `, ` + field3 + `, `+ field4 +` WITH ROLLUP;`;
         console.log(query);
-        let t0 = performance.now();
         db.query(query, (err, output) => {
-            let time = performance.now() - t0;
             if (err) res.redirect('/');
             
-            res.render('one_table.ejs', { // Pass data to front end
-                title: "One Table Query 1", 
-                result1: output,
-                result2: false,
-                time: time
+            res.render('rollup.ejs', { // Pass data to front end
+                title: "Rollup Query", 
+                result: output,
             });
         });
     },
