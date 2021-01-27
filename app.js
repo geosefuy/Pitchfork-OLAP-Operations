@@ -5,11 +5,10 @@ const mysql = require('mysql');
 const app = express();
 const port = 8080; 
 
-const { loadPageOne, oneQuery1, oneQuery2 } = require('./routes/rollup');
-const { loadPageTwo, twoQuery1, twoQuery2 } = require('./routes/drilldown');
-const { loadPageThree, threeQuery1, threeQuery2, threeQuery2_opt } = require('./routes/dice');
-const { loadPageFourSix, fourSixQuery } = require('./routes/slice');
-const { createIndexAndLoadPage, dropIndexAndLoadPage } = require('./routes/index_control');
+const { loadRollup, queryRollup } = require('./routes/rollup');
+const { loadDrilldown, queryDrilldown } = require('./routes/drilldown');
+const { loadDice, queryDice } = require('./routes/dice');
+const { loadSlice, querySlice } = require('./routes/slice');
 
 // Don't forget to create the db here!
 // GCLOUD Deployment DB connection

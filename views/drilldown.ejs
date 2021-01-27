@@ -14,8 +14,7 @@
     <%- include ("navbar.ejs", {one: false, two: true, three: false, foursix: false}) %>
     <div class="container">
         <div class="row">
-        <div class="col-sm">
-            <form action="/two_table/getquery1" method="post">
+            <form action="/drilldown/getquery" method="post">
                 <label for="query1" class="form-label">Query 1: From albums made in each year from X - X (ex. 2007 - 2010), find the most prominent reviewers (3) out of all reviewers in the website</label>
                 <input type="number" class="form-control" placeholder="Year ex. 1999, 2015" name="query1_1" min="1959" max="2017">
                 <input type="number" class="form-control" placeholder="Year ex. 1999, 2015" name="query1_2" min="1959" max="2017">
@@ -25,22 +24,7 @@
                 <input class="btn btn-primary mr-3" type="submit" value="Search">
             </form>
         </div>
-        <div class="col-sm">
-            <form action="/two_table/getquery2" method="post">
-                <label for="query2" class="form-label">Query 2: Least reviewed genre in a given year (ex. 2007)</label>
-                <input type="number" class="form-control" placeholder="Year ex. 1999, 2015" name="query2" min="1999" max="2017">
-                <!-- <input type="text" class="form-control" placeholder="Year ex. 1998, 2015" name="query2"> -->
-                <br>
-                <input class="btn btn-primary mr-3" type="submit" value="Search">
-            </form>
-        </div>
-        </div>
       </div>
-      <% if (time) { %>
-      <div class="container time">
-          Query time: <%= time %> milliseconds
-      </div>
-      <% } %>
     <% if (result1) { %>
     <div class="table-wrapper">
         <table class="table table-hovered">
@@ -60,26 +44,6 @@
             </tbody>
         </table>
     </div>
-    <% } %>
-    <% if (result2) { %>
-        <div class="table-wrapper">
-            <table class="table table-hovered">
-                <thead class="thead-dark">
-                    <tr>
-                        <th scope="col">Genre</th>
-                        <th scope="col">Number of Reviews</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <% result2.forEach((record, index) => { %>
-                        <tr>
-                            <td><%= record.genre %></td>
-                            <td><%= record.reviewCount %></td>
-                        </tr>
-                    <% }) %>
-                </tbody>
-            </table>
-        </div>
     <% } %>
 </body>
 </html>

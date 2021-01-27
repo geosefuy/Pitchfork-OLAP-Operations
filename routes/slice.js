@@ -7,7 +7,7 @@ module.exports = {
             time: false
         });
     },
-    fourSixQuery: (req, res) => {
+    querySlice: (req, res) => {
         //query here
         let month = req.body.query_1;
         let year = req.body.query_2;

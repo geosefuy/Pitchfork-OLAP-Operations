@@ -14,61 +14,14 @@
     <%- include ("navbar.ejs", {one: false, two: false, three: true, foursix: false}) %>
     <div class="container">
         <div class="row">
-            <div class="col-sm">
-                <form action="/three_table/getquery1" method="post">
-                    <label for="query1" class="form-label">Query 1: Average, maximum, and minimum scores of albums released in a given year (ex. 2007) divided by genre</label>
-                    <input type="number" class="form-control" placeholder="Year ex. 1999, 2015" name="query1" min="1959" max="2017">
-                    <br>
-                    <input class="btn btn-primary mr-3" type="submit" value="Search">
-                </form>
-            </div>
-                <div class="col-sm">
-                    <form action="/three_table/getquery2" method="post">
-                        <label for="query2" class="form-label">Query 2: Last reviews given per month of X (ex. 2015) for X (ex. rock) albums released in the same year.</label>
-                        <input type="number" class="form-control" placeholder="Year ex. 1999, 2015" name="query2_1" min="1999" max="2017">
-                        <select class="form-control" name="query2_2">
-                            <option selected disabled>Genre ex. rock, electronic</option>
-                            <option>global</option>
-                            <option>jazz</option>
-                            <option>folk/country</option>
-                            <option>metal</option>
-                            <option>pop/r&b</option>
-                            <option>rap</option>
-                            <option>experimental</option>
-                            <option>electronic</option>
-                            <option>rock</option>
-                        </select>
-                        <br>
-                        <input class="btn btn-primary mr-3" type="submit" value="Search">
-                    </form>
-                </div>
-                <!-- <div class="col-sm">
-                    <form action="/three_table/getquery2_opt" method="post">
-                        <label for="query2" class="form-label">Query 2 <strong>Optimized</strong>: Last reviews given per month of X (ex. 2015) for X (ex. rock) albums released in the same year.</label>
-                        <input type="number" class="form-control" placeholder="Year ex. 1999, 2015" name="query2_1_opt" min="1999" max="2017">
-                        <select class="form-control" name="query2_2_opt">
-                            <option selected disabled>Genre ex. rock, electronic</option>
-                            <option>global</option>
-                            <option>jazz</option>
-                            <option>folk/country</option>
-                            <option>metal</option>
-                            <option>pop/r&b</option>
-                            <option>rap</option>
-                            <option>experimental</option>
-                            <option>electronic</option>
-                            <option>rock</option>
-                        </select>
-                        <br>
-                        <input class="btn btn-primary mr-3" type="submit" value="Search">
-                    </form>
-                </div> -->
+            <form action="/dice/getquery" method="post">
+                <label for="query1" class="form-label">Query 1: Average, maximum, and minimum scores of albums released in a given year (ex. 2007) divided by genre</label>
+                <input type="number" class="form-control" placeholder="Year ex. 1999, 2015" name="query1" min="1959" max="2017">
+                <br>
+                <input class="btn btn-primary mr-3" type="submit" value="Search">
+            </form>
         </div>
     </div>
-    <% if (time) { %>
-    <div class="container time">
-        Query time: <%= time %> milliseconds
-    </div>
-    <% } %>
     <% if (result1) { %>
     <div class="table-wrapper">
         <table class="table table-hovered">
@@ -94,74 +47,6 @@
             </tbody>
         </table>
     </div>
-    <% } %>
-    <% if (result2) { %>
-        <div class="table-wrapper">
-            <table class="table table-hovered">
-                <thead class="thead-dark">
-                    <tr>
-                        <th scope="col">Genre</th>
-                        <th scope="col">Year</th>
-                        <th scope="col">Review ID</th>
-                        <th scope="col">Title</th>
-                        <th scope="col">Artist</th>
-                        <th scope="col">URL</th>
-                        <th scope="col">Score</th>
-                        <th scope="col">Best New Music</th>
-                        <!-- <th scope="col">Author</th>
-                        <th scope="col">Author Type</th> -->
-                        <th scope="col">Published Date</th>
-                        <th scope="col">Weekday Published</th>
-                        <th scope="col">Published Day</th>
-                        <th scope="col">Published Month</th>
-                        <th scope="col">Published Year</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <% result2.forEach((record, index) => { %>
-                        <tr>
-                            <td><%= record.genre %></td>
-                            <td><%= record.year %></td>
-                            <td><%= record.reviewid %></td>
-                            <td><%= record.title %></td>
-                            <td><%= record.artist %></td>
-                            <td><%= record.url %></td>
-                            <td><%= record.score %></td>
-                            <td><%= record.best_new_music %></td>
-                            <!-- <td><%= record.author %></td>
-                            <td><%= record.author_type %></td> -->
-                            <td><%= record.pub_date %></td>
-                            <td><%= record.pub_weekday %></td>
-                            <td><%= record.pub_day %></td>
-                            <td><%= record.pub_month %></td>
-                            <td><%= record.pub_year %></td>
-                        </tr>
-                    <% }) %>
-                </tbody>
-            </table>
-        </div>
-    <% } %>
-    <% if (result2_opt) { %>
-        <div class="table-wrapper">
-            <table class="table table-hovered">
-                <thead class="thead-dark">
-                    <tr>
-                        <th scope="col">Genre</th>
-                        <th scope="col">Year</th>
-                        <th scope="col">Title</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <% result2_opt.forEach((record, index) => { %>
-                        <tr>
-                            <td><%= record.genre %></td>
-                            <td><%= record.year %></td>
-                            <td><%= record.title %></td>
-                        </tr>
-                    <% }) %>
-                </tbody>
-            </table>
-        </div>
     <% } %>
 </body>
 </html>

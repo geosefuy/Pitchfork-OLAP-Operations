@@ -1,6 +1,6 @@
 const performance = require('perf_hooks').performance;
 module.exports = {
-    loadPageTwo: (req, res) => {
+    loadDrilldown: (req, res) => {
         res.render('drilldown.ejs', { // Pass data to front end
             title: "Drill-down Query",
             result1: false,
@@ -8,7 +8,7 @@ module.exports = {
             time: false
         });
     },
-    twoQuery1: (req, res) => {
+    queryDrilldown: (req, res) => {
         //query here
         let year1 = req.body.query1_1;
         let year2 = req.body.query1_2;
@@ -44,39 +44,6 @@ module.exports = {
                 title: "Two Table Query 1", 
                 result1: output,
                 result2: false,
-                time: time
-            });
-        });
-    },
-    twoQuery2: (req, res) => {
-        //query here
-        let year = req.body.query2;
-        let query = `SELECT g.genre, COUNT(g.reviewid) reviewCount
-                        FROM genres g
-                        JOIN reviews r
-                        ON g.reviewid = r.reviewid
-                        WHERE r.pub_year = ` + year + `
-                        GROUP BY g.genre
-                        HAVING COUNT(g.reviewid) = (
-                            SELECT MIN(genrecount)
-                                FROM (
-                        SELECT COUNT(g.reviewid) genrecount
-                                    FROM genres g
-                                    JOIN reviews r
-                                    ON g.reviewid = r.reviewid
-                                    WHERE r.pub_year = ` + year + `
-                                    GROUP BY g.genre
-                                    ) a )`;
-        console.log(query);
-        let t0 = performance.now();
-        db.query(query, (err, output) => {
-            let time = performance.now() - t0;
-            if (err) res.redirect('/'); 
-
-            res.render('two_table.ejs', { // Pass data to front end
-                title: "Two Table Query 2", 
-                result1: false,
-                result2: output,
                 time: time
             });
         });
