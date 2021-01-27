@@ -53,7 +53,7 @@ module.exports = {
             if (err) res.redirect('/'); 
 
             let query = `SELECT DISTINCT label
-                        FROM artists ar
+                        FROM artist ar
                         ORDER BY label
                         LIMIT 4000`
             
