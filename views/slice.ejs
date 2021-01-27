@@ -153,6 +153,14 @@
 
             }
         })
+
+        $("#field1").on("change", function () {
+            if ($("#field1").val() === "blank") {
+                $("#submit").attr("disabled", true)
+            } else {
+                $("#submit").attr("disabled", false)
+            }
+        })
     </script>
 </body>
 </html>
