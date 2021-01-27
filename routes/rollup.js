@@ -9,7 +9,7 @@ module.exports = {
     },
     queryRollup: (req, res) => {
         //query here
-        let field1 = req.body.field1 === "genre1-sub" ? "genre1" : req.body.field2;
+        let field1 = req.body.field1 === "genre1-sub" ? "genre1" : req.body.field1;
         let field2 = req.body.field1 === "genre1-sub" ? "genre2" : req.body.field2;
         let field3 = req.body.field1 === "genre1-sub" ? "genre3" : req.body.field3;
         let field4 = req.body.field1 === "genre1-sub" ? "genre4" : req.body.field4;
