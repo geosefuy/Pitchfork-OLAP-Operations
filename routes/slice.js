@@ -1,10 +1,25 @@
 const performance = require('perf_hooks').performance;
 module.exports = {
     loadSlice: (req, res) => {
-        res.render('slice.ejs', { // Pass data to front end
-            title: "Slice Query",
-            result: false,
-        });
+        // res.render('slice.ejs', { // Pass data to front end
+        //     title: "Slice Query",
+        //     result: false,
+        // });
+
+        let query = `SELECT DISTINCT label
+                        FROM artists ar
+                        ORDER BY label
+                        LIMIT 4000`
+        
+        db.query(query, (err, labels) => {
+            if (err) res.redirect('/');
+
+            res.render('slice.ejs', { // Pass data to front end
+                title: "Slice Query",
+                labels: labels,
+                result: false,
+            });
+        })
     },
     querySlice: (req, res) => {
         //query here
@@ -48,10 +63,25 @@ module.exports = {
         db.query(query, (err, output) => {
             if (err) res.redirect('/'); 
 
-            res.render('slice.ejs', { // Pass data to front end
-                title: "Slice Query", 
-                result: output,
-            });
+            // res.render('slice.ejs', { // Pass data to front end
+            //     title: "Slice Query", 
+            //     result: output,
+            // });
+
+            let query = `SELECT DISTINCT label
+                        FROM artists ar
+                        ORDER BY label
+                        LIMIT 4000`
+            
+            db.query(query, (err, labels) => {
+                if (err) res.redirect('/');
+    
+                res.render('slice.ejs', { // Pass data to front end
+                    title: "Slice Query",
+                    labels: labels,
+                    result: output,
+                });
+            })
         });
     },
 }
