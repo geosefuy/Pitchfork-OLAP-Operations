@@ -92,15 +92,19 @@
         <table class="table table-hovered">
             <thead class="thead-dark">
                 <tr>
-                    <th scope="col">Author</th>
-                    <th scope="col">Number of Reviews</th>
+                    <th scope="col"><%= getEqString(headers.field1) %></th>
+                    <th scope="col"><%= getEqString(headers.field2) %></th>
+                    <th scope="col"><%= getEqString(headers.field3) %></th>
+                    <th scope="col"><%= getEqString(headers.field4) %></th>
+                    <th scope="col"><%= getEqString(headers.field5) %></th>
                 </tr>
             </thead>
             <tbody>
-                <% result1.forEach((record, index) => { %>
+                <% result.forEach((record, index) => { %>
                     <tr>
-                        <th scope="col"><%= record.author %></th>
-                        <td><%= record.reviewCount %></td>
+                        <% for (let key in record) { %>
+                            <td> record[key] </td>
+                        <% } %>
                     </tr>
                 <% }) %>
             </tbody>
@@ -108,6 +112,17 @@
     </div>
     <% } %>
     <script>
+        function getEqString(fieldName) {
+            if (fieldName = "year") return "Release Year"
+            if (fieldName = "pub_year") return "Publication Year"
+            if (fieldName = "pub_month") return "Publication Month"
+            if (fieldName = "pub_weekday") return "Publication Weekday"
+            if (fieldName = "author") return "Author"
+            if (fieldName = "author_type") return "Author Type"
+            if (fieldName = "artist") return "Arrtist"
+            if (fieldName = "label") return "Label"
+        }
+
         function checkErr() {
             const field1 = $("#field1").val()
             const field2 = $("#field2").val()

@@ -4,6 +4,7 @@ module.exports = {
         res.render('drilldown.ejs', { // Pass data to front end
             title: "Drill-down Query",
             result: false,
+            headers: false
         });
     },
     queryDrilldown: (req, res) => {
@@ -24,6 +25,13 @@ module.exports = {
             res.render('drilldown.ejs', { // Pass data to front end
                 title: "Drill-down Query", 
                 result: output,
+                headers: {
+                    field1: field1,
+                    field2: field2,
+                    field3: field3,
+                    field4: field4,
+                    field5: field5
+                }
             });
         });
     },

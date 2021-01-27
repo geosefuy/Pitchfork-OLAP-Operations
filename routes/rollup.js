@@ -4,6 +4,7 @@ module.exports = {
         res.render('rollup.ejs', { // Pass data to front end
             title: "Rollup Query",
             result: false,
+            headers: false
         });
     },
     queryRollup: (req, res) => {
@@ -23,6 +24,12 @@ module.exports = {
             res.render('rollup.ejs', { // Pass data to front end
                 title: "Rollup Query", 
                 result: output,
+                headers: {
+                    field1: field1,
+                    field2: field2,
+                    field3: field3,
+                    field4: field4,
+                }
             });
         });
     },

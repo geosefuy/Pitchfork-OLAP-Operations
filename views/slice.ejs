@@ -105,25 +105,19 @@
         <table class="table table-hovered">
             <thead class="thead-dark">
                 <tr>
-                    <th scope="col">Title</th>
-                    <th scope="col">Artist</th>
                     <th scope="col">Label</th>
-                    <th scope="col">Genre</th>
                     <th scope="col">Year</th>
-                    <th scope="col">Score</th>
-                    <th scope="col">Published Date</th>
+                    <th scope="col">Artist</th>
+                    <th scope="col">Average Score</th>
                 </tr>
             </thead>
             <tbody>
                 <% results.forEach((record, index) => { %>
                     <tr>
-                        <td><%= record.title %></td>
-                        <td><%= record.artist %></td>
                         <td><%= record.label %></td>
-                        <td><%= record.genre %></td>
                         <td><%= record.year %></td>
-                        <td><%= record.score %></td>
-                        <td><%= record.pub_date %></td>
+                        <td><%= record.artist %></td>
+                        <td><%= record.avgScore %></td>
                     </tr>
                 <% }) %>
             </tbody>
