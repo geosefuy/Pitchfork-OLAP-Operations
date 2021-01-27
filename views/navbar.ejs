@@ -1,0 +1,40 @@
+<body>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+  <div class="container-fluid">
+    <div class="collapse navbar-collapse justify-content-between" id="navbarNav">
+      <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="nav-link<% if (one) { %> active<% } %>" href="/one_table">One Table Query</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link<% if (two) { %> active<% } %>" href="/two_table">Two Table Query</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link<% if (three) { %> active<% } %>" href="/three_table">Three Table Query</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link<% if (foursix) { %> active<% } %>" href="/foursix_table">Four to Six Table Query</a>
+        </li>
+      </ul>
+      <!-- <ul class="navbar-nav">
+        <li class="nav-item">
+          <a class="btn btn-success mx-2" href="/create_index" id="create">Create Indices</a>
+        </li>
+        <li class="nav-item">
+          <a class="btn btn-danger mx-2" href="/drop_index" id="drop">Drop Indices</a>
+        </li>
+      </ul> -->
+    </div>
+  </div>
+  <!-- <script>
+    document.getElementById("create").onclick = () => {
+      document.getElementById("create").classList.add("disabled")
+      document.getElementById("drop").classList.remove("disabled")
+    }
+    document.getElementById("drop").onclick = () => {
+      document.getElementById("drop").classList.add("disabled")
+      document.getElementById("create").classList.remove("disabled")
+    }
+  </script> -->
+</nav>
+</body>

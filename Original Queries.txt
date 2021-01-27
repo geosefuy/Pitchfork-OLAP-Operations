@@ -1,0 +1,78 @@
+1-Table Queries:
+
+SELECT r.pub_year, COUNT(r.title) albums
+FROM reviews r
+WHERE r.score >= X
+GROUP BY r.pub_year
+ORDER BY r.pub_year
+
+SELECT r.author_type, COUNT(r.author) authors
+FROM reviews r
+WHERE r.pub_weekday BETWEEN X AND X AND r.author_type <> ""
+GROUP BY r.author_type
+
+2-Table Queries:
+
+SELECT r.author, COUNT(r.author) reviewCount
+FROM reviews r, years y
+WHERE r.reviewid = y.reviewid AND
+y.year BETWEEN X AND X
+GROUP BY r.author
+ORDER BY COUNT(r.author) DESC
+LIMIT 3
+
+SELECT g.genre, COUNT(g.reviewid) reviewCount
+FROM genres g, reviews r
+WHERE g.reviewid = r.reviewid AND r.pub_year = X
+GROUP BY g.genre
+HAVING COUNT(g.reviewid) = (
+SELECT MIN(genrecount)
+FROM (
+SELECT COUNT(g.reviewid) genrecount
+FROM genres g, reviews r
+WHERE g.reviewid = r.reviewid AND r.pub_year = X
+GROUP BY g.genre
+) a )
+
+3-Table Queries:
+
+SELECT y.year, g.genre, ROUND(AVG(r.score), 2) avgScore, MAX(r.score) maxScore, MIN(r.score) minScore
+FROM reviews r, years y, genres g
+WHERE r.reviewid = y.reviewid AND r.reviewid = g.reviewid AND year = X
+GROUP BY y.year, g.genre
+
+SELECT g.genre, y.year, r.* 
+FROM reviews r, genres g, years y
+WHERE r.reviewid = g.reviewid 
+AND r.reviewid = y.reviewid 
+AND r.pub_year = X
+AND y.year = X
+AND g.genre = X
+AND (g.genre, r.pub_month, r.pub_day) IN (
+SELECT genre, pub_month, MAX(pub_day)
+FROM reviews r, genres g
+WHERE pub_year = X
+AND g.genre = X
+AND r.reviewid = g.reviewid
+GROUP BY pub_month, genre
+)
+ORDER BY r.pub_month
+
+4 to 6-Table Query:
+
+SELECT r.title, r.artist, l.label, g.genre, y.year, r.score, r.pub_date
+FROM reviews r, labels l, genres g, years y
+WHERE r.reviewid = l.reviewid 
+AND r.reviewid = g.reviewid 
+AND r.reviewid = y.reviewid 
+AND r.pub_month = ` + month + ` 
+AND r.pub_year = ` + year + ` 
+AND y.year = ` + year + ` 
+AND r.score < (
+SELECT AVG(r2.score)
+FROM reviews r2, years y2
+WHERE r2.reviewid = y2.reviewid AND y2.year = ` + yearminus + `
+GROUP BY y2.year
+)
+ORDER BY r.score DESC
+LIMIT 10
