@@ -1,22 +1,22 @@
 Rollup Query:
 
-SELECT X, X, X, X, COUNT(score) numReviews
+SELECT X, X, X, X, AVG(score) avgScore
 FROM reviews r, (albums a, time t)
-WHERE (id joining)
+WHERE (r.albumid = a.albumid AND t.timeid = r.timeid)
 GROUP BY X, X, X, X WITH ROLLUP;
 
 Drilldown Query:
 
 SELECT X, X, X, X, X, AVG(score - (SELECT AVG(score) FROM reviews)) avgNormScore
-FROM reviews r, (artists a, authors au, time t)
-WHERE (id joining)
+FROM reviews r, (artist a, author au), time t
+WHERE (r.authorid = au.authorid AND r.artistid = a.artistid) AND r.timeid = t.timeid
 GROUP BY X, X, X, X, X;
 
 Dice Query:
 
 CREATE TEMPORARY TABLE diceCube
 SELECT year, author, author_type, pub_weekday, COUNT(score) reviewCount
-FROM reviews r, albums a, authors au, time t
+FROM reviews r, album a, author au, time t
 WHERE r.albumid = a.albumid AND r.authorid = au.authorid AND r.timeid = t.timeid
 GROUP BY year, author, author_type, pub_weekday
 WITH ROLLUP
@@ -24,7 +24,7 @@ WITH ROLLUP
 UNION
 
 SELECT year, author, author_type, pub_weekday, COUNT(score) reviewCount
-FROM reviews r, albums a, authors au, time t
+FROM reviews r, album a, author au, time t
 WHERE r.albumid = a.albumid AND r.authorid = au.authorid AND r.timeid = t.timeid
 GROUP BY author, author_type, pub_weekday, year
 WITH ROLLUP
@@ -32,7 +32,7 @@ WITH ROLLUP
 UNION
 
 SELECT year, author, author_type, pub_weekday, COUNT(score) reviewCount
-FROM reviews r, albums a, authors au, time t
+FROM reviews r, album a, author au, time t
 WHERE r.albumid = a.albumid AND r.authorid = au.authorid AND r.timeid = t.timeid
 GROUP BY author_type, pub_weekday, year, author
 WITH ROLLUP
@@ -40,7 +40,7 @@ WITH ROLLUP
 UNION
 
 SELECT year, author, author_type, pub_weekday, COUNT(score) reviewCount
-FROM reviews r, albums a, authors au, time t
+FROM reviews r, album a, author au, time t
 WHERE r.albumid = a.albumid AND r.authorid = au.authorid AND r.timeid = t.timeid
 GROUP BY pub_weekday, year, author, author_type
 WITH ROLLUP
@@ -48,14 +48,14 @@ WITH ROLLUP
 UNION
 
 SELECT year, NULL, author_type, NULL, COUNT(score) reviewCount
-FROM reviews r, albums a, authors au, time t
+FROM reviews r, album a, author au, time t
 WHERE r.albumid = a.albumid AND r.authorid = au.authorid AND r.timeid = t.timeid
 GROUP BY year, author_type
 
 UNION
 
 SELECT NULL, author, NULL, pub_weekday, COUNT(score) reviewCount
-FROM reviews r, albums a, authors au, time t
+FROM reviews r, album a, author au, time t
 WHERE r.albumid = a.albumid AND r.authorid = au.authorid AND r.timeid = t.timeid
 GROUP BY author, pub_weekday
 
@@ -75,7 +75,7 @@ Slice Query:
 
 CREATE TEMPORARY TABLE sliceCube
 SELECT label, year, artist, AVG(score) avgScore
-FROM reviews r, albums a, artists ar
+FROM reviews r, album a, artist ar
 WHERE r.albumid = a.albumid AND r.artistid = ar.artistid
 GROUP BY label, year, artist
 WITH ROLLUP
@@ -83,15 +83,15 @@ WITH ROLLUP
 UNION
 
 SELECT label, year, artist, AVG(score) avgScore
-FROM reviews r, albums a, artists ar
+FROM reviews r, album a, artist ar
 WHERE r.albumid = a.albumid AND r.artistid = ar.artistid
-GROUP BY year, artist, label, 
+GROUP BY year, artist, label
 WITH ROLLUP
 
 UNION
 
 SELECT label, year, artist, AVG(score) avgScore
-FROM reviews r, albums a, artists ar
+FROM reviews r, album a, artist ar
 WHERE r.albumid = a.albumid AND r.artistid = ar.artistid
 GROUP BY artist, label, year
 WITH ROLLUP
@@ -104,3 +104,5 @@ artist IS NULL, artist;
 SELECT label, year, artist, avgScore
 FROM sliceCube
 WHERE label = X;
+
+DROP TABLE sliceCube;

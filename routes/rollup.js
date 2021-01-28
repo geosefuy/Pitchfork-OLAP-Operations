@@ -15,7 +15,7 @@ module.exports = {
         let field4 = req.body.field1 === "genre1-sub" ? "genre4" : req.body.field4;
         let query;
         if (field2 == "genre2"){
-            query = `SELECT DISTINCT ` + field1 + `, genre2, genre3, genre4, COUNT(score) numReviews
+            query = `SELECT DISTINCT ` + field1 + `, genre2, genre3, genre4, AVG(score) avgScore
                     FROM reviews r, album a
                     WHERE r.albumid = a.albumid
                     GROUP BY ` + field1 + `, genre2, genre3, genre4 WITH ROLLUP
@@ -25,7 +25,7 @@ module.exports = {
                                 genre4 IS NULL, genre4;`;
         }
         else{
-            query = `SELECT ` + field1 + `, ` + field2 + `, `+ field3 + `, ` + field4 + `, COUNT(score) numReviews
+            query = `SELECT ` + field1 + `, ` + field2 + `, `+ field3 + `, ` + field4 + `, AVG(score) avgScore
                     FROM reviews r, album a, time t
                     WHERE r.albumid = a.albumid AND t.timeid = r.timeid
                     GROUP BY ` + field1 + `, ` + field2 + `, ` + field3 + `, `+ field4 +` WITH ROLLUP;`;
