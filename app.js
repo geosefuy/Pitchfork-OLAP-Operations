@@ -21,7 +21,7 @@ const { loadSlice, querySlice } = require('./routes/slice');
 // Local DB connection with CLOUD SQL
 // const db = mysql.createConnection({
 //     host: '35.201.146.224',
-//     user: 'root',
+//     user: 'test',
 //     password: '1234',
 //     port: 3306,
 //     database: 'pitchfork_star',

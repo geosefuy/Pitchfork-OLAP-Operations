@@ -3,7 +3,7 @@ runtime: nodejs14
 env_variables:
   CLOUD_SQL_USERNAME: test
   CLOUD_SQL_PASSWORD: 1234
-  CLOUD_SQL_DATABASE_NAME: pitchfork
+  CLOUD_SQL_DATABASE_NAME: pitchfork_star
   CLOUD_SQL_CONNECTION_NAME: stadvdb-s112-mco2:asia-east1:stadvdv-mco2-pitchfork
 
 beta_settings:
