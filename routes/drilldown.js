@@ -21,20 +21,23 @@ module.exports = {
                 query = `SELECT ` + field1 + `, ` + field2 + `, ` + field3 + `, ` + field4 + `, ` + field5 + `, AVG(score - (SELECT AVG(score) FROM reviews)) avgNormScore
                             FROM reviews r, artist a, author au, time t
                             WHERE r.authorid = au.authorid AND r.timeid = t.timeid AND r.artistid = a.artistid
-                            GROUP BY ` + field1 + `, ` + field2 + `, ` + field3 + `, ` + field4 + `, ` + field5 + `;`;
+                            GROUP BY ` + field1 + `, ` + field2 + `, ` + field3 + `, ` + field4 + `, ` + field5 + `
+                            ORDER BY ` + field1 + `, ` + field2 + `, ` + field3 + `, ` + field4 + `, ` + field5 + `;`;
             }
             else{
                 query = `SELECT ` + field1 + `, ` + field2 + `, ` + field3 + `, ` + field4 + `, ` + field5 + `, AVG(score - (SELECT AVG(score) FROM reviews)) avgNormScore
                             FROM reviews r, author au, time t
                             WHERE r.authorid = au.authorid AND r.timeid = t.timeid
-                            GROUP BY ` + field1 + `, ` + field2 + `, ` + field3 + `, ` + field4 + `, ` + field5 + `;`;
+                            GROUP BY ` + field1 + `, ` + field2 + `, ` + field3 + `, ` + field4 + `, ` + field5 + `
+                            ORDER BY ` + field1 + `, ` + field2 + `, ` + field3 + `, ` + field4 + `, ` + field5 + `;`;
             }
         }
         else{
             query = `SELECT ` + field1 + `, ` + field2 + `, ` + field3 + `, ` + field4 + `, ` + field5 + `, AVG(score - (SELECT AVG(score) FROM reviews)) avgNormScore
                         FROM reviews r, artist a, time t
                         WHERE r.timeid = t.timeid AND r.artistid = a.artistid
-                        GROUP BY ` + field1 + `, ` + field2 + `, ` + field3 + `, ` + field4 + `, ` + field5 + `;`;
+                        GROUP BY ` + field1 + `, ` + field2 + `, ` + field3 + `, ` + field4 + `, ` + field5 + `
+                        ORDER BY ` + field1 + `, ` + field2 + `, ` + field3 + `, ` + field4 + `, ` + field5 + `;`;
         }
         console.log(query);
         db.query(query, (err, output) => {
