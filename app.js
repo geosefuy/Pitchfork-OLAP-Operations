@@ -27,7 +27,7 @@ const { loadSlice, querySlice } = require('./routes/slice');
 //     database: 'pitchfork_star',
 //     multipleStatements: true
 // });
-// Local DB connection with Local SQL 'pitchforks_unoptimized'
+// Local DB connection with Local SQL 'pitchfork_star'
 const db = mysql.createConnection({
     host: 'localhost',
     user: 'root',
