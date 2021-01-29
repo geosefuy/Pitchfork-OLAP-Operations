@@ -8,8 +8,12 @@ module.exports = {
     },
     queryDice: (req, res) => {
         //query here
-        let field1 = req.body.field1; //dice 2 fields
-        let field2 = req.body.field2;
+        let field1_1 = req.body.field1_1; //dice 6 fields
+        let field1_2 = req.body.field1_2;
+        let field1_3 = req.body.field1_3;
+        let field2_1 = req.body.field2_1;
+        let field2_2 = req.body.field2_2;
+        let field2_3 = req.body.field2_3;
         let query = `CREATE TEMPORARY TABLE diceCube
                         SELECT year, author, author_type, pub_weekday, COUNT(score) reviewCount
                                 FROM reviews r, album a, author au, time t
@@ -66,7 +70,10 @@ module.exports = {
 
             query = `SELECT year, author, author_type, pub_weekday, reviewCount
                         FROM diceCube
-                        WHERE author_type = '` + field1 + `' AND pub_weekday = ` + field2 + `;`
+                        WHERE (author_type = '` + field1_1 + `'` + (field1_2 == "blank1_1" ? `` : ` OR author_type = '` + field1_2 + `'`)
+                         + (field1_3 == "blank1_2" ? `` : ` OR author_type = '` + field1_3 + `'`) + `)
+                        AND (pub_weekday = ` + field2_1 + `` + (field2_2 == "blank2_1" ? `` : ` OR pub_weekday = ` + field2_2) 
+                         + (field2_3 == "blank2_2" ? `` : ` OR pub_weekday = ` + field2_3) + `);`
 
             db.query(query, (err, output) => {
                 console.log(query)

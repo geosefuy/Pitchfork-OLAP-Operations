@@ -67,7 +67,7 @@ pub_weekday IS NULL, pub_weekday;
 
 SELECT year, author, author_type, pub_weekday, reviewCount
 FROM diceCube
-WHERE author_type = X AND pub_weekday = X;
+WHERE (author_type = X OR author_type = X OR author_type = X) AND (pub_weekday = X OR pub_weekday = X OR pub_weekday = X);
 
 DROP TABLE diceCube;
 
