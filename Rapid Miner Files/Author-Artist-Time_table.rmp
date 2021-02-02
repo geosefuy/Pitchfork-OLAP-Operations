@@ -1,0 +1,596 @@
+<?xml version="1.0" encoding="UTF-8"?><process version="9.8.001">
+  <context>
+    <input/>
+    <output/>
+    <macros/>
+  </context>
+  <operator activated="true" class="process" compatibility="9.8.001" expanded="true" name="Process" origin="EXPORTED_TURBOPREP">
+    <parameter key="logverbosity" value="init"/>
+    <parameter key="random_seed" value="2001"/>
+    <parameter key="send_mail" value="never"/>
+    <parameter key="notification_email" value=""/>
+    <parameter key="process_duration_for_mail" value="30"/>
+    <parameter key="encoding" value="SYSTEM"/>
+    <process expanded="true">
+      <operator activated="true" class="retrieve" compatibility="9.8.001" expanded="true" height="68" name="Retrieve artists (2)" width="90" x="45" y="544">
+        <parameter key="repository_entry" value="//Local Repository/artists"/>
+      </operator>
+      <operator activated="true" class="retrieve" compatibility="9.8.001" expanded="true" height="68" name="Retrieve labels (2)" width="90" x="45" y="646">
+        <parameter key="repository_entry" value="//Local Repository/labels"/>
+      </operator>
+      <operator activated="true" class="concurrency:join" compatibility="9.8.001" expanded="true" height="82" name="Join (2)" width="90" x="179" y="544">
+        <parameter key="remove_double_attributes" value="true"/>
+        <parameter key="join_type" value="inner"/>
+        <parameter key="use_id_attribute_as_key" value="false"/>
+        <list key="key_attributes">
+          <parameter key="reviewid" value="reviewid"/>
+        </list>
+        <parameter key="keep_both_join_attributes" value="false"/>
+      </operator>
+      <operator activated="true" class="generate_id" compatibility="9.8.001" expanded="true" height="82" name="Generate ID (3)" width="90" x="313" y="544">
+        <parameter key="create_nominal_ids" value="false"/>
+        <parameter key="offset" value="0"/>
+      </operator>
+      <operator activated="true" class="rename" compatibility="9.8.001" expanded="true" height="82" name="artistid (2)" width="90" x="447" y="544">
+        <parameter key="old_name" value="id"/>
+        <parameter key="new_name" value="artistid"/>
+        <list key="rename_additional_attributes"/>
+      </operator>
+      <operator activated="true" class="write_csv" compatibility="9.8.001" expanded="true" height="82" name="Write CSV (3)" width="90" x="581" y="544">
+        <parameter key="column_separator" value=";"/>
+        <parameter key="write_attribute_names" value="true"/>
+        <parameter key="quote_nominal_values" value="true"/>
+        <parameter key="format_date_attributes" value="true"/>
+        <parameter key="append_to_file" value="false"/>
+        <parameter key="encoding" value="SYSTEM"/>
+      </operator>
+      <operator activated="true" class="retrieve" compatibility="9.8.001" expanded="true" height="68" name="Retrieve (3)" origin="EXPORTED_TURBOPREP" width="90" x="45" y="34">
+        <parameter key="repository_entry" value="//Local Repository/reviews"/>
+        <description align="center" color="transparent" colored="false" width="126">Loading reviews</description>
+      </operator>
+      <operator activated="true" class="retrieve" compatibility="9.8.001" expanded="true" height="68" name="Retrieve (4)" origin="EXPORTED_TURBOPREP" width="90" x="45" y="289">
+        <parameter key="repository_entry" value="//Local Repository/reviews"/>
+        <description align="center" color="transparent" colored="false" width="126">Loading reviews (2)</description>
+      </operator>
+      <operator activated="true" class="subprocess" compatibility="9.8.001" expanded="true" height="82" name="Turbo Prep Process (4)" width="90" x="179" y="289">
+        <process expanded="true">
+          <operator activated="true" class="subprocess" compatibility="9.8.001" expanded="true" height="82" name="Subprocess (4)" width="90" x="45" y="34">
+            <process expanded="true">
+              <operator activated="true" class="nominal_to_text" compatibility="9.8.001" expanded="true" height="82" name="Nominal to Text (4)" width="90" x="45" y="34">
+                <parameter key="attribute_filter_type" value="value_type"/>
+                <parameter key="attribute" value=""/>
+                <parameter key="attributes" value=""/>
+                <parameter key="use_except_expression" value="false"/>
+                <parameter key="value_type" value="nominal"/>
+                <parameter key="use_value_type_exception" value="false"/>
+                <parameter key="except_value_type" value="file_path"/>
+                <parameter key="block_type" value="single_value"/>
+                <parameter key="use_block_type_exception" value="false"/>
+                <parameter key="except_block_type" value="single_value"/>
+                <parameter key="invert_selection" value="false"/>
+                <parameter key="include_special_attributes" value="false"/>
+                <description align="center" color="transparent" colored="false" width="126">Change all categorical columns to text</description>
+              </operator>
+              <operator activated="true" class="text_to_nominal" compatibility="9.8.001" expanded="true" height="82" name="Text to Nominal (4)" width="90" x="179" y="34">
+                <parameter key="attribute_filter_type" value="value_type"/>
+                <parameter key="attribute" value=""/>
+                <parameter key="attributes" value=""/>
+                <parameter key="use_except_expression" value="false"/>
+                <parameter key="value_type" value="text"/>
+                <parameter key="use_value_type_exception" value="false"/>
+                <parameter key="except_value_type" value="text"/>
+                <parameter key="block_type" value="value_matrix"/>
+                <parameter key="use_block_type_exception" value="false"/>
+                <parameter key="except_block_type" value="value_matrix_row_start"/>
+                <parameter key="invert_selection" value="false"/>
+                <parameter key="include_special_attributes" value="false"/>
+                <description align="center" color="transparent" colored="false" width="126">Change all text columns to nominal</description>
+              </operator>
+              <operator activated="true" class="numerical_to_real" compatibility="9.8.001" expanded="true" height="82" name="Numerical to Real (4)" width="90" x="313" y="34">
+                <parameter key="attribute_filter_type" value="value_type"/>
+                <parameter key="attribute" value=""/>
+                <parameter key="attributes" value=""/>
+                <parameter key="use_except_expression" value="false"/>
+                <parameter key="value_type" value="numeric"/>
+                <parameter key="use_value_type_exception" value="false"/>
+                <parameter key="except_value_type" value="real"/>
+                <parameter key="block_type" value="value_series"/>
+                <parameter key="use_block_type_exception" value="false"/>
+                <parameter key="except_block_type" value="value_series_end"/>
+                <parameter key="invert_selection" value="false"/>
+                <parameter key="include_special_attributes" value="false"/>
+                <description align="center" color="transparent" colored="false" width="126">Change all numerical columns to real</description>
+              </operator>
+              <connect from_port="in 1" to_op="Nominal to Text (4)" to_port="example set input"/>
+              <connect from_op="Nominal to Text (4)" from_port="example set output" to_op="Text to Nominal (4)" to_port="example set input"/>
+              <connect from_op="Text to Nominal (4)" from_port="example set output" to_op="Numerical to Real (4)" to_port="example set input"/>
+              <connect from_op="Numerical to Real (4)" from_port="example set output" to_port="out 1"/>
+              <portSpacing port="source_in 1" spacing="0"/>
+              <portSpacing port="source_in 2" spacing="0"/>
+              <portSpacing port="sink_out 1" spacing="0"/>
+              <portSpacing port="sink_out 2" spacing="0"/>
+            </process>
+            <description align="center" color="transparent" colored="false" width="126">Unify column types</description>
+          </operator>
+          <operator activated="true" class="select_attributes" compatibility="9.8.001" expanded="true" height="82" name="Select Attributes (21)" origin="GENERATED_TURBOPREP" width="90" x="179" y="34">
+            <parameter key="attribute_filter_type" value="regular_expression"/>
+            <parameter key="attribute" value=""/>
+            <parameter key="attributes" value=""/>
+            <parameter key="regular_expression" value="\Qtitle\E"/>
+            <parameter key="use_except_expression" value="false"/>
+            <parameter key="value_type" value="attribute_value"/>
+            <parameter key="use_value_type_exception" value="false"/>
+            <parameter key="except_value_type" value="time"/>
+            <parameter key="block_type" value="attribute_block"/>
+            <parameter key="use_block_type_exception" value="false"/>
+            <parameter key="except_block_type" value="value_matrix_row_start"/>
+            <parameter key="invert_selection" value="true"/>
+            <parameter key="include_special_attributes" value="false"/>
+            <description align="center" color="transparent" colored="false" width="126">Remove title</description>
+          </operator>
+          <operator activated="true" class="select_attributes" compatibility="9.8.001" expanded="true" height="82" name="Select Attributes (22)" origin="GENERATED_TURBOPREP" width="90" x="404" y="34">
+            <parameter key="attribute_filter_type" value="regular_expression"/>
+            <parameter key="attribute" value=""/>
+            <parameter key="attributes" value=""/>
+            <parameter key="regular_expression" value="\Qartist\E"/>
+            <parameter key="use_except_expression" value="false"/>
+            <parameter key="value_type" value="attribute_value"/>
+            <parameter key="use_value_type_exception" value="false"/>
+            <parameter key="except_value_type" value="time"/>
+            <parameter key="block_type" value="attribute_block"/>
+            <parameter key="use_block_type_exception" value="false"/>
+            <parameter key="except_block_type" value="value_matrix_row_start"/>
+            <parameter key="invert_selection" value="true"/>
+            <parameter key="include_special_attributes" value="false"/>
+            <description align="center" color="transparent" colored="false" width="126">Remove artist</description>
+          </operator>
+          <operator activated="true" class="select_attributes" compatibility="9.8.001" expanded="true" height="82" name="Select Attributes (23)" origin="GENERATED_TURBOPREP" width="90" x="538" y="34">
+            <parameter key="attribute_filter_type" value="regular_expression"/>
+            <parameter key="attribute" value=""/>
+            <parameter key="attributes" value=""/>
+            <parameter key="regular_expression" value="\Qurl\E"/>
+            <parameter key="use_except_expression" value="false"/>
+            <parameter key="value_type" value="attribute_value"/>
+            <parameter key="use_value_type_exception" value="false"/>
+            <parameter key="except_value_type" value="time"/>
+            <parameter key="block_type" value="attribute_block"/>
+            <parameter key="use_block_type_exception" value="false"/>
+            <parameter key="except_block_type" value="value_matrix_row_start"/>
+            <parameter key="invert_selection" value="true"/>
+            <parameter key="include_special_attributes" value="false"/>
+            <description align="center" color="transparent" colored="false" width="126">Remove url</description>
+          </operator>
+          <operator activated="true" class="select_attributes" compatibility="9.8.001" expanded="true" height="82" name="Select Attributes (24)" origin="GENERATED_TURBOPREP" width="90" x="903" y="34">
+            <parameter key="attribute_filter_type" value="regular_expression"/>
+            <parameter key="attribute" value=""/>
+            <parameter key="attributes" value=""/>
+            <parameter key="regular_expression" value="\Qscore\E"/>
+            <parameter key="use_except_expression" value="false"/>
+            <parameter key="value_type" value="attribute_value"/>
+            <parameter key="use_value_type_exception" value="false"/>
+            <parameter key="except_value_type" value="time"/>
+            <parameter key="block_type" value="attribute_block"/>
+            <parameter key="use_block_type_exception" value="false"/>
+            <parameter key="except_block_type" value="value_matrix_row_start"/>
+            <parameter key="invert_selection" value="true"/>
+            <parameter key="include_special_attributes" value="false"/>
+            <description align="center" color="transparent" colored="false" width="126">Remove score</description>
+          </operator>
+          <operator activated="true" class="select_attributes" compatibility="9.8.001" expanded="true" height="82" name="Select Attributes (25)" origin="GENERATED_TURBOPREP" width="90" x="1135" y="34">
+            <parameter key="attribute_filter_type" value="regular_expression"/>
+            <parameter key="attribute" value=""/>
+            <parameter key="attributes" value=""/>
+            <parameter key="regular_expression" value="\Qbest_new_music\E"/>
+            <parameter key="use_except_expression" value="false"/>
+            <parameter key="value_type" value="attribute_value"/>
+            <parameter key="use_value_type_exception" value="false"/>
+            <parameter key="except_value_type" value="time"/>
+            <parameter key="block_type" value="attribute_block"/>
+            <parameter key="use_block_type_exception" value="false"/>
+            <parameter key="except_block_type" value="value_matrix_row_start"/>
+            <parameter key="invert_selection" value="true"/>
+            <parameter key="include_special_attributes" value="false"/>
+            <description align="center" color="transparent" colored="false" width="126">Remove best_new_music</description>
+          </operator>
+          <operator activated="true" class="select_attributes" compatibility="9.8.001" expanded="true" height="82" name="Select Attributes (26)" origin="GENERATED_TURBOPREP" width="90" x="1269" y="34">
+            <parameter key="attribute_filter_type" value="regular_expression"/>
+            <parameter key="attribute" value=""/>
+            <parameter key="attributes" value=""/>
+            <parameter key="regular_expression" value="\Qauthor\E"/>
+            <parameter key="use_except_expression" value="false"/>
+            <parameter key="value_type" value="attribute_value"/>
+            <parameter key="use_value_type_exception" value="false"/>
+            <parameter key="except_value_type" value="time"/>
+            <parameter key="block_type" value="attribute_block"/>
+            <parameter key="use_block_type_exception" value="false"/>
+            <parameter key="except_block_type" value="value_matrix_row_start"/>
+            <parameter key="invert_selection" value="true"/>
+            <parameter key="include_special_attributes" value="false"/>
+            <description align="center" color="transparent" colored="false" width="126">Remove author</description>
+          </operator>
+          <operator activated="true" class="select_attributes" compatibility="9.8.001" expanded="true" height="82" name="Select Attributes (27)" origin="GENERATED_TURBOPREP" width="90" x="1403" y="34">
+            <parameter key="attribute_filter_type" value="regular_expression"/>
+            <parameter key="attribute" value=""/>
+            <parameter key="attributes" value=""/>
+            <parameter key="regular_expression" value="\Qauthor_type\E"/>
+            <parameter key="use_except_expression" value="false"/>
+            <parameter key="value_type" value="attribute_value"/>
+            <parameter key="use_value_type_exception" value="false"/>
+            <parameter key="except_value_type" value="time"/>
+            <parameter key="block_type" value="attribute_block"/>
+            <parameter key="use_block_type_exception" value="false"/>
+            <parameter key="except_block_type" value="value_matrix_row_start"/>
+            <parameter key="invert_selection" value="true"/>
+            <parameter key="include_special_attributes" value="false"/>
+            <description align="center" color="transparent" colored="false" width="126">Remove author_type</description>
+          </operator>
+          <operator activated="true" class="filter_examples" compatibility="9.8.001" expanded="true" height="103" name="Filter Examples (5)" origin="GENERATED_TURBOPREP" width="90" x="1537" y="34">
+            <parameter key="parameter_expression" value=""/>
+            <parameter key="condition_class" value="custom_filters"/>
+            <parameter key="invert_filter" value="false"/>
+            <list key="filters_list">
+              <parameter key="filters_entry_key" value="pub_date.is_not_missing."/>
+            </list>
+            <parameter key="filters_logic_and" value="true"/>
+            <parameter key="filters_check_metadata" value="true"/>
+            <description align="center" color="transparent" colored="false" width="126">pub_date is not missing </description>
+          </operator>
+          <operator activated="true" class="order_attributes" compatibility="9.8.001" expanded="true" height="82" name="Reorder Attributes (4)" width="90" x="2091" y="34">
+            <parameter key="sort_mode" value="user specified"/>
+            <parameter key="attribute_ordering" value="reviewid|pub_date|pub_weekday|pub_day|pub_month|pub_year"/>
+            <parameter key="use_regular_expressions" value="false"/>
+            <parameter key="handle_unmatched" value="append"/>
+            <parameter key="sort_direction" value="ascending"/>
+            <description align="center" color="transparent" colored="false" width="126">Ensure order of columns matches the table view.</description>
+          </operator>
+          <connect from_port="in 1" to_op="Subprocess (4)" to_port="in 1"/>
+          <connect from_op="Subprocess (4)" from_port="out 1" to_op="Select Attributes (21)" to_port="example set input"/>
+          <connect from_op="Select Attributes (21)" from_port="example set output" to_op="Select Attributes (22)" to_port="example set input"/>
+          <connect from_op="Select Attributes (22)" from_port="example set output" to_op="Select Attributes (23)" to_port="example set input"/>
+          <connect from_op="Select Attributes (23)" from_port="example set output" to_op="Select Attributes (24)" to_port="example set input"/>
+          <connect from_op="Select Attributes (24)" from_port="example set output" to_op="Select Attributes (25)" to_port="example set input"/>
+          <connect from_op="Select Attributes (25)" from_port="example set output" to_op="Select Attributes (26)" to_port="example set input"/>
+          <connect from_op="Select Attributes (26)" from_port="example set output" to_op="Select Attributes (27)" to_port="example set input"/>
+          <connect from_op="Select Attributes (27)" from_port="example set output" to_op="Filter Examples (5)" to_port="example set input"/>
+          <connect from_op="Filter Examples (5)" from_port="example set output" to_op="Reorder Attributes (4)" to_port="example set input"/>
+          <connect from_op="Reorder Attributes (4)" from_port="example set output" to_port="out 1"/>
+          <portSpacing port="source_in 1" spacing="0"/>
+          <portSpacing port="source_in 2" spacing="0"/>
+          <portSpacing port="sink_out 1" spacing="0"/>
+          <portSpacing port="sink_out 2" spacing="0"/>
+        </process>
+        <description align="center" color="transparent" colored="false" width="126">TP Operations: Remove, Remove, Remove, Remove, Remove, Remove, Remove, Filter</description>
+      </operator>
+      <operator activated="true" class="generate_id" compatibility="9.8.001" expanded="true" height="82" name="Generated ID" width="90" x="313" y="289">
+        <parameter key="create_nominal_ids" value="false"/>
+        <parameter key="offset" value="0"/>
+      </operator>
+      <operator activated="true" class="rename" compatibility="9.8.001" expanded="true" height="82" name="timeid (2)" width="90" x="447" y="289">
+        <parameter key="old_name" value="id"/>
+        <parameter key="new_name" value="timeid"/>
+        <list key="rename_additional_attributes"/>
+      </operator>
+      <operator activated="true" class="write_csv" compatibility="9.8.001" expanded="true" height="82" name="Write CSV (2)" width="90" x="581" y="289">
+        <parameter key="column_separator" value=";"/>
+        <parameter key="write_attribute_names" value="true"/>
+        <parameter key="quote_nominal_values" value="true"/>
+        <parameter key="format_date_attributes" value="true"/>
+        <parameter key="append_to_file" value="false"/>
+        <parameter key="encoding" value="SYSTEM"/>
+      </operator>
+      <operator activated="true" class="subprocess" compatibility="9.8.001" expanded="true" height="82" name="Turbo Prep Process (5)" width="90" x="179" y="34">
+        <process expanded="true">
+          <operator activated="true" class="subprocess" compatibility="9.8.001" expanded="true" height="82" name="Subprocess (6)" width="90" x="45" y="34">
+            <process expanded="true">
+              <operator activated="true" class="nominal_to_text" compatibility="9.8.001" expanded="true" height="82" name="Nominal to Text (6)" width="90" x="45" y="34">
+                <parameter key="attribute_filter_type" value="value_type"/>
+                <parameter key="attribute" value=""/>
+                <parameter key="attributes" value=""/>
+                <parameter key="use_except_expression" value="false"/>
+                <parameter key="value_type" value="nominal"/>
+                <parameter key="use_value_type_exception" value="false"/>
+                <parameter key="except_value_type" value="file_path"/>
+                <parameter key="block_type" value="single_value"/>
+                <parameter key="use_block_type_exception" value="false"/>
+                <parameter key="except_block_type" value="single_value"/>
+                <parameter key="invert_selection" value="false"/>
+                <parameter key="include_special_attributes" value="false"/>
+                <description align="center" color="transparent" colored="false" width="126">Change all categorical columns to text</description>
+              </operator>
+              <operator activated="true" class="text_to_nominal" compatibility="9.8.001" expanded="true" height="82" name="Text to Nominal (6)" width="90" x="179" y="34">
+                <parameter key="attribute_filter_type" value="value_type"/>
+                <parameter key="attribute" value=""/>
+                <parameter key="attributes" value=""/>
+                <parameter key="use_except_expression" value="false"/>
+                <parameter key="value_type" value="text"/>
+                <parameter key="use_value_type_exception" value="false"/>
+                <parameter key="except_value_type" value="text"/>
+                <parameter key="block_type" value="value_matrix"/>
+                <parameter key="use_block_type_exception" value="false"/>
+                <parameter key="except_block_type" value="value_matrix_row_start"/>
+                <parameter key="invert_selection" value="false"/>
+                <parameter key="include_special_attributes" value="false"/>
+                <description align="center" color="transparent" colored="false" width="126">Change all text columns to nominal</description>
+              </operator>
+              <operator activated="true" class="numerical_to_real" compatibility="9.8.001" expanded="true" height="82" name="Numerical to Real (6)" width="90" x="404" y="34">
+                <parameter key="attribute_filter_type" value="value_type"/>
+                <parameter key="attribute" value=""/>
+                <parameter key="attributes" value=""/>
+                <parameter key="use_except_expression" value="false"/>
+                <parameter key="value_type" value="numeric"/>
+                <parameter key="use_value_type_exception" value="false"/>
+                <parameter key="except_value_type" value="real"/>
+                <parameter key="block_type" value="value_series"/>
+                <parameter key="use_block_type_exception" value="false"/>
+                <parameter key="except_block_type" value="value_series_end"/>
+                <parameter key="invert_selection" value="false"/>
+                <parameter key="include_special_attributes" value="false"/>
+                <description align="center" color="transparent" colored="false" width="126">Change all numerical columns to real</description>
+              </operator>
+              <connect from_port="in 1" to_op="Nominal to Text (6)" to_port="example set input"/>
+              <connect from_op="Nominal to Text (6)" from_port="example set output" to_op="Text to Nominal (6)" to_port="example set input"/>
+              <connect from_op="Text to Nominal (6)" from_port="example set output" to_op="Numerical to Real (6)" to_port="example set input"/>
+              <connect from_op="Numerical to Real (6)" from_port="example set output" to_port="out 1"/>
+              <portSpacing port="source_in 1" spacing="0"/>
+              <portSpacing port="source_in 2" spacing="0"/>
+              <portSpacing port="sink_out 1" spacing="0"/>
+              <portSpacing port="sink_out 2" spacing="0"/>
+            </process>
+            <description align="center" color="transparent" colored="false" width="126">Unify column types</description>
+          </operator>
+          <operator activated="true" class="select_attributes" compatibility="9.8.001" expanded="true" height="82" name="Select Attributes (28)" origin="GENERATED_TURBOPREP" width="90" x="179" y="34">
+            <parameter key="attribute_filter_type" value="regular_expression"/>
+            <parameter key="attribute" value=""/>
+            <parameter key="attributes" value=""/>
+            <parameter key="regular_expression" value="\Qtitle\E"/>
+            <parameter key="use_except_expression" value="false"/>
+            <parameter key="value_type" value="attribute_value"/>
+            <parameter key="use_value_type_exception" value="false"/>
+            <parameter key="except_value_type" value="time"/>
+            <parameter key="block_type" value="attribute_block"/>
+            <parameter key="use_block_type_exception" value="false"/>
+            <parameter key="except_block_type" value="value_matrix_row_start"/>
+            <parameter key="invert_selection" value="true"/>
+            <parameter key="include_special_attributes" value="false"/>
+            <description align="center" color="transparent" colored="false" width="126">Remove title</description>
+          </operator>
+          <operator activated="true" class="select_attributes" compatibility="9.8.001" expanded="true" height="82" name="Select Attributes (29)" origin="GENERATED_TURBOPREP" width="90" x="313" y="34">
+            <parameter key="attribute_filter_type" value="regular_expression"/>
+            <parameter key="attribute" value=""/>
+            <parameter key="attributes" value=""/>
+            <parameter key="regular_expression" value="\Qartist\E"/>
+            <parameter key="use_except_expression" value="false"/>
+            <parameter key="value_type" value="attribute_value"/>
+            <parameter key="use_value_type_exception" value="false"/>
+            <parameter key="except_value_type" value="time"/>
+            <parameter key="block_type" value="attribute_block"/>
+            <parameter key="use_block_type_exception" value="false"/>
+            <parameter key="except_block_type" value="value_matrix_row_start"/>
+            <parameter key="invert_selection" value="true"/>
+            <parameter key="include_special_attributes" value="false"/>
+            <description align="center" color="transparent" colored="false" width="126">Remove artist</description>
+          </operator>
+          <operator activated="true" class="select_attributes" compatibility="9.8.001" expanded="true" height="82" name="Select Attributes (30)" origin="GENERATED_TURBOPREP" width="90" x="514" y="34">
+            <parameter key="attribute_filter_type" value="regular_expression"/>
+            <parameter key="attribute" value=""/>
+            <parameter key="attributes" value=""/>
+            <parameter key="regular_expression" value="\Qurl\E"/>
+            <parameter key="use_except_expression" value="false"/>
+            <parameter key="value_type" value="attribute_value"/>
+            <parameter key="use_value_type_exception" value="false"/>
+            <parameter key="except_value_type" value="time"/>
+            <parameter key="block_type" value="attribute_block"/>
+            <parameter key="use_block_type_exception" value="false"/>
+            <parameter key="except_block_type" value="value_matrix_row_start"/>
+            <parameter key="invert_selection" value="true"/>
+            <parameter key="include_special_attributes" value="false"/>
+            <description align="center" color="transparent" colored="false" width="126">Remove url</description>
+          </operator>
+          <operator activated="true" class="select_attributes" compatibility="9.8.001" expanded="true" height="82" name="Select Attributes (31)" origin="GENERATED_TURBOPREP" width="90" x="903" y="34">
+            <parameter key="attribute_filter_type" value="regular_expression"/>
+            <parameter key="attribute" value=""/>
+            <parameter key="attributes" value=""/>
+            <parameter key="regular_expression" value="\Qscore\E"/>
+            <parameter key="use_except_expression" value="false"/>
+            <parameter key="value_type" value="attribute_value"/>
+            <parameter key="use_value_type_exception" value="false"/>
+            <parameter key="except_value_type" value="time"/>
+            <parameter key="block_type" value="attribute_block"/>
+            <parameter key="use_block_type_exception" value="false"/>
+            <parameter key="except_block_type" value="value_matrix_row_start"/>
+            <parameter key="invert_selection" value="true"/>
+            <parameter key="include_special_attributes" value="false"/>
+            <description align="center" color="transparent" colored="false" width="126">Remove score</description>
+          </operator>
+          <operator activated="true" class="select_attributes" compatibility="9.8.001" expanded="true" height="82" name="Select Attributes (32)" origin="GENERATED_TURBOPREP" width="90" x="1037" y="34">
+            <parameter key="attribute_filter_type" value="regular_expression"/>
+            <parameter key="attribute" value=""/>
+            <parameter key="attributes" value=""/>
+            <parameter key="regular_expression" value="\Qbest_new_music\E"/>
+            <parameter key="use_except_expression" value="false"/>
+            <parameter key="value_type" value="attribute_value"/>
+            <parameter key="use_value_type_exception" value="false"/>
+            <parameter key="except_value_type" value="time"/>
+            <parameter key="block_type" value="attribute_block"/>
+            <parameter key="use_block_type_exception" value="false"/>
+            <parameter key="except_block_type" value="value_matrix_row_start"/>
+            <parameter key="invert_selection" value="true"/>
+            <parameter key="include_special_attributes" value="false"/>
+            <description align="center" color="transparent" colored="false" width="126">Remove best_new_music</description>
+          </operator>
+          <operator activated="true" class="select_attributes" compatibility="9.8.001" expanded="true" height="82" name="Select Attributes (33)" origin="GENERATED_TURBOPREP" width="90" x="1360" y="34">
+            <parameter key="attribute_filter_type" value="regular_expression"/>
+            <parameter key="attribute" value=""/>
+            <parameter key="attributes" value=""/>
+            <parameter key="regular_expression" value="\Qpub_date\E"/>
+            <parameter key="use_except_expression" value="false"/>
+            <parameter key="value_type" value="attribute_value"/>
+            <parameter key="use_value_type_exception" value="false"/>
+            <parameter key="except_value_type" value="time"/>
+            <parameter key="block_type" value="attribute_block"/>
+            <parameter key="use_block_type_exception" value="false"/>
+            <parameter key="except_block_type" value="value_matrix_row_start"/>
+            <parameter key="invert_selection" value="true"/>
+            <parameter key="include_special_attributes" value="false"/>
+            <description align="center" color="transparent" colored="false" width="126">Remove pub_date</description>
+          </operator>
+          <operator activated="true" class="select_attributes" compatibility="9.8.001" expanded="true" height="82" name="Select Attributes (34)" origin="GENERATED_TURBOPREP" width="90" x="1494" y="34">
+            <parameter key="attribute_filter_type" value="regular_expression"/>
+            <parameter key="attribute" value=""/>
+            <parameter key="attributes" value=""/>
+            <parameter key="regular_expression" value="\Qpub_weekday\E"/>
+            <parameter key="use_except_expression" value="false"/>
+            <parameter key="value_type" value="attribute_value"/>
+            <parameter key="use_value_type_exception" value="false"/>
+            <parameter key="except_value_type" value="time"/>
+            <parameter key="block_type" value="attribute_block"/>
+            <parameter key="use_block_type_exception" value="false"/>
+            <parameter key="except_block_type" value="value_matrix_row_start"/>
+            <parameter key="invert_selection" value="true"/>
+            <parameter key="include_special_attributes" value="false"/>
+            <description align="center" color="transparent" colored="false" width="126">Remove pub_weekday</description>
+          </operator>
+          <operator activated="true" class="select_attributes" compatibility="9.8.001" expanded="true" height="82" name="Select Attributes (35)" origin="GENERATED_TURBOPREP" width="90" x="1628" y="34">
+            <parameter key="attribute_filter_type" value="regular_expression"/>
+            <parameter key="attribute" value=""/>
+            <parameter key="attributes" value=""/>
+            <parameter key="regular_expression" value="\Qpub_day\E"/>
+            <parameter key="use_except_expression" value="false"/>
+            <parameter key="value_type" value="attribute_value"/>
+            <parameter key="use_value_type_exception" value="false"/>
+            <parameter key="except_value_type" value="time"/>
+            <parameter key="block_type" value="attribute_block"/>
+            <parameter key="use_block_type_exception" value="false"/>
+            <parameter key="except_block_type" value="value_matrix_row_start"/>
+            <parameter key="invert_selection" value="true"/>
+            <parameter key="include_special_attributes" value="false"/>
+            <description align="center" color="transparent" colored="false" width="126">Remove pub_day</description>
+          </operator>
+          <operator activated="true" class="select_attributes" compatibility="9.8.001" expanded="true" height="82" name="Select Attributes (36)" origin="GENERATED_TURBOPREP" width="90" x="1762" y="34">
+            <parameter key="attribute_filter_type" value="regular_expression"/>
+            <parameter key="attribute" value=""/>
+            <parameter key="attributes" value=""/>
+            <parameter key="regular_expression" value="\Qpub_month\E"/>
+            <parameter key="use_except_expression" value="false"/>
+            <parameter key="value_type" value="attribute_value"/>
+            <parameter key="use_value_type_exception" value="false"/>
+            <parameter key="except_value_type" value="time"/>
+            <parameter key="block_type" value="attribute_block"/>
+            <parameter key="use_block_type_exception" value="false"/>
+            <parameter key="except_block_type" value="value_matrix_row_start"/>
+            <parameter key="invert_selection" value="true"/>
+            <parameter key="include_special_attributes" value="false"/>
+            <description align="center" color="transparent" colored="false" width="126">Remove pub_month</description>
+          </operator>
+          <operator activated="true" class="select_attributes" compatibility="9.8.001" expanded="true" height="82" name="Select Attributes (37)" origin="GENERATED_TURBOPREP" width="90" x="1896" y="34">
+            <parameter key="attribute_filter_type" value="regular_expression"/>
+            <parameter key="attribute" value=""/>
+            <parameter key="attributes" value=""/>
+            <parameter key="regular_expression" value="\Qpub_year\E"/>
+            <parameter key="use_except_expression" value="false"/>
+            <parameter key="value_type" value="attribute_value"/>
+            <parameter key="use_value_type_exception" value="false"/>
+            <parameter key="except_value_type" value="time"/>
+            <parameter key="block_type" value="attribute_block"/>
+            <parameter key="use_block_type_exception" value="false"/>
+            <parameter key="except_block_type" value="value_matrix_row_start"/>
+            <parameter key="invert_selection" value="true"/>
+            <parameter key="include_special_attributes" value="false"/>
+            <description align="center" color="transparent" colored="false" width="126">Remove pub_year</description>
+          </operator>
+          <operator activated="true" class="filter_examples" compatibility="9.8.001" expanded="true" height="103" name="Filter Examples (6)" origin="GENERATED_TURBOPREP" width="90" x="2030" y="34">
+            <parameter key="parameter_expression" value=""/>
+            <parameter key="condition_class" value="custom_filters"/>
+            <parameter key="invert_filter" value="false"/>
+            <list key="filters_list">
+              <parameter key="filters_entry_key" value="author.is_not_missing."/>
+            </list>
+            <parameter key="filters_logic_and" value="true"/>
+            <parameter key="filters_check_metadata" value="true"/>
+            <description align="center" color="transparent" colored="false" width="126">author is not missing </description>
+          </operator>
+          <operator activated="true" class="filter_examples" compatibility="9.8.001" expanded="true" height="103" name="Filter Examples (7)" origin="GENERATED_TURBOPREP" width="90" x="2164" y="34">
+            <parameter key="parameter_expression" value=""/>
+            <parameter key="condition_class" value="custom_filters"/>
+            <parameter key="invert_filter" value="false"/>
+            <list key="filters_list">
+              <parameter key="filters_entry_key" value="author_type.is_not_missing."/>
+            </list>
+            <parameter key="filters_logic_and" value="true"/>
+            <parameter key="filters_check_metadata" value="true"/>
+            <description align="center" color="transparent" colored="false" width="126">author_type is not missing </description>
+          </operator>
+          <operator activated="true" class="order_attributes" compatibility="9.8.001" expanded="true" height="82" name="Reorder Attributes (6)" width="90" x="2298" y="34">
+            <parameter key="sort_mode" value="user specified"/>
+            <parameter key="attribute_ordering" value="reviewid|author|author_type"/>
+            <parameter key="use_regular_expressions" value="false"/>
+            <parameter key="handle_unmatched" value="append"/>
+            <parameter key="sort_direction" value="ascending"/>
+            <description align="center" color="transparent" colored="false" width="126">Ensure order of columns matches the table view.</description>
+          </operator>
+          <connect from_port="in 1" to_op="Subprocess (6)" to_port="in 1"/>
+          <connect from_op="Subprocess (6)" from_port="out 1" to_op="Select Attributes (28)" to_port="example set input"/>
+          <connect from_op="Select Attributes (28)" from_port="example set output" to_op="Select Attributes (29)" to_port="example set input"/>
+          <connect from_op="Select Attributes (29)" from_port="example set output" to_op="Select Attributes (30)" to_port="example set input"/>
+          <connect from_op="Select Attributes (30)" from_port="example set output" to_op="Select Attributes (31)" to_port="example set input"/>
+          <connect from_op="Select Attributes (31)" from_port="example set output" to_op="Select Attributes (32)" to_port="example set input"/>
+          <connect from_op="Select Attributes (32)" from_port="example set output" to_op="Select Attributes (33)" to_port="example set input"/>
+          <connect from_op="Select Attributes (33)" from_port="example set output" to_op="Select Attributes (34)" to_port="example set input"/>
+          <connect from_op="Select Attributes (34)" from_port="example set output" to_op="Select Attributes (35)" to_port="example set input"/>
+          <connect from_op="Select Attributes (35)" from_port="example set output" to_op="Select Attributes (36)" to_port="example set input"/>
+          <connect from_op="Select Attributes (36)" from_port="example set output" to_op="Select Attributes (37)" to_port="example set input"/>
+          <connect from_op="Select Attributes (37)" from_port="example set output" to_op="Filter Examples (6)" to_port="example set input"/>
+          <connect from_op="Filter Examples (6)" from_port="example set output" to_op="Filter Examples (7)" to_port="example set input"/>
+          <connect from_op="Filter Examples (7)" from_port="example set output" to_op="Reorder Attributes (6)" to_port="example set input"/>
+          <connect from_op="Reorder Attributes (6)" from_port="example set output" to_port="out 1"/>
+          <portSpacing port="source_in 1" spacing="0"/>
+          <portSpacing port="source_in 2" spacing="0"/>
+          <portSpacing port="sink_out 1" spacing="0"/>
+          <portSpacing port="sink_out 2" spacing="0"/>
+        </process>
+        <description align="center" color="transparent" colored="false" width="126">TP Operations: Remove, Remove, Remove, Remove, Remove, Remove, Remove, Remove, Remove, Remove, Filter, Filter</description>
+      </operator>
+      <operator activated="true" class="generate_id" compatibility="9.8.001" expanded="true" height="82" name="Generate ID (4)" width="90" x="313" y="34">
+        <parameter key="create_nominal_ids" value="false"/>
+        <parameter key="offset" value="0"/>
+      </operator>
+      <operator activated="true" class="rename" compatibility="9.8.001" expanded="true" height="82" name="authorid (2)" width="90" x="447" y="34">
+        <parameter key="old_name" value="id"/>
+        <parameter key="new_name" value="authorid"/>
+        <list key="rename_additional_attributes"/>
+      </operator>
+      <operator activated="true" class="write_csv" compatibility="9.8.001" expanded="true" height="82" name="Write CSV" width="90" x="581" y="34">
+        <parameter key="column_separator" value=";"/>
+        <parameter key="write_attribute_names" value="true"/>
+        <parameter key="quote_nominal_values" value="true"/>
+        <parameter key="format_date_attributes" value="true"/>
+        <parameter key="append_to_file" value="false"/>
+        <parameter key="encoding" value="SYSTEM"/>
+      </operator>
+      <connect from_op="Retrieve artists (2)" from_port="output" to_op="Join (2)" to_port="left"/>
+      <connect from_op="Retrieve labels (2)" from_port="output" to_op="Join (2)" to_port="right"/>
+      <connect from_op="Join (2)" from_port="join" to_op="Generate ID (3)" to_port="example set input"/>
+      <connect from_op="Generate ID (3)" from_port="example set output" to_op="artistid (2)" to_port="example set input"/>
+      <connect from_op="artistid (2)" from_port="example set output" to_op="Write CSV (3)" to_port="input"/>
+      <connect from_op="Write CSV (3)" from_port="through" to_port="result 3"/>
+      <connect from_op="Retrieve (3)" from_port="output" to_op="Turbo Prep Process (5)" to_port="in 1"/>
+      <connect from_op="Retrieve (4)" from_port="output" to_op="Turbo Prep Process (4)" to_port="in 1"/>
+      <connect from_op="Turbo Prep Process (4)" from_port="out 1" to_op="Generated ID" to_port="example set input"/>
+      <connect from_op="Generated ID" from_port="example set output" to_op="timeid (2)" to_port="example set input"/>
+      <connect from_op="timeid (2)" from_port="example set output" to_op="Write CSV (2)" to_port="input"/>
+      <connect from_op="Write CSV (2)" from_port="through" to_port="result 2"/>
+      <connect from_op="Turbo Prep Process (5)" from_port="out 1" to_op="Generate ID (4)" to_port="example set input"/>
+      <connect from_op="Generate ID (4)" from_port="example set output" to_op="authorid (2)" to_port="example set input"/>
+      <connect from_op="authorid (2)" from_port="example set output" to_op="Write CSV" to_port="input"/>
+      <connect from_op="Write CSV" from_port="through" to_port="result 1"/>
+      <portSpacing port="source_input 1" spacing="0"/>
+      <portSpacing port="sink_result 1" spacing="0"/>
+      <portSpacing port="sink_result 2" spacing="0"/>
+      <portSpacing port="sink_result 3" spacing="0"/>
+      <portSpacing port="sink_result 4" spacing="0"/>
+      <description align="center" color="yellow" colored="false" height="105" resized="false" width="180" x="309" y="136">Author</description>
+      <description align="center" color="yellow" colored="false" height="105" resized="false" width="180" x="184" y="660">artist</description>
+      <description align="center" color="yellow" colored="false" height="105" resized="false" width="180" x="312" y="387">time</description>
+    </process>
+  </operator>
+</process>
