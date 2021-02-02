@@ -71,9 +71,9 @@ module.exports = {
             query = `SELECT year, author, author_type, pub_weekday, reviewCount
                         FROM diceCube
                         WHERE (author_type = '` + field1_1 + `'` + (field1_2 == "blank1_1" ? `` : ` OR author_type = '` + field1_2 + `'`)
-                         + (field1_3 == "blank1_2" ? `` : ` OR author_type = '` + field1_3 + `'`) + `)
+                         + (field1_3 == "blank1_2" || field1_3 == undefined ? `` : ` OR author_type = '` + field1_3 + `'`) + `)
                         AND (pub_weekday = ` + field2_1 + `` + (field2_2 == "blank2_1" ? `` : ` OR pub_weekday = ` + field2_2) 
-                         + (field2_3 == "blank2_2" ? `` : ` OR pub_weekday = ` + field2_3) + `);`
+                         + (field2_3 == "blank2_2" || field1_3 == undefined ? `` : ` OR pub_weekday = ` + field2_3) + `);`
 
             db.query(query, (err, output) => {
                 console.log(query)
